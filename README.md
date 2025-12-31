@@ -247,8 +247,34 @@ docker compose run --rm lr-tool
 ```
 
 
+## 🧹 Reset Everything (Clean Environment)
 
+### ⚠️ This removes all PostgreSQL data
 
+```
+
+docker compose down -v --remove-orphans
+docker compose up -d --build
+
+```
+
+## 🧪 Verifying Replication
+
+On the target database:
+```
+SELECT * FROM pg_subscription;
+SELECT * FROM pg_stat_subscription;
+```
+
+Insert data on the source:
+```
+INSERT INTO public.orders VALUES (1, 100);
+```
+
+Verify on the target:
+```
+SELECT * FROM public.orders;
+```
 
 ## 🔐 Security Notes
 
@@ -266,3 +292,8 @@ docker compose run --rm lr-tool
 - Improper slot cleanup causes WAL retention issues
 
 PG-ReplicaCtl handles these constraints intentionally.
+
+
+
+
+
