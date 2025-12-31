@@ -1,0 +1,55 @@
+global:
+  state_file: ".lr_state.json"
+  log_level: INFO
+
+replications:
+  sales_lr:
+    source:
+      host: source-db
+      port: 5432
+      database: sales
+      user: source
+      password: source123
+
+    target:
+      host: target-db
+      port: 5432
+      database: sales_replica
+      user: target
+      password: target123
+
+    publication:
+      name: sales_pub
+
+    subscription:
+      name: sales_sub
+      copy_data: true
+
+    tables:
+      - public.orders
+      - public.customers
+
+  same_container_lr:
+    source:
+      host: source-db
+      port: 5432
+      database: hr
+      user: source
+      password: source123
+
+    target:
+      host: source-db
+      port: 5432
+      database: hr_replica
+      user: source
+      password: source123
+
+    publication:
+      name: hr_pub
+
+    subscription:
+      name: hr_sub
+      copy_data: true
+
+    tables:
+      - public.employees

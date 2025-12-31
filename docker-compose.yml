@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  source-db:
+    image: postgres:15
+    container_name: source-db
+    environment:
+      POSTGRES_USER: source
+      POSTGRES_PASSWORD: source123
+    command: >
+      postgres
+      -c wal_level=logical
+      -c max_replication_slots=10
+      -c max_wal_senders=10
+      -c max_logical_replication_workers=10
+    ports:
+      - "5433:5432"
+
+  target-db:
+    image: postgres:15
+    container_name: target-db
+    environment:
+      POSTGRES_USER: target
+      POSTGRES_PASSWORD: target123
+    ports:
+      - "5434:5432"
+
+  lr-tool:
+    build: .
+    container_name: lr-tool
+    volumes:
+      - .:/app
+    depends_on:
+      - source-db
+      - target-db
